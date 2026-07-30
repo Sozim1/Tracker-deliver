@@ -1,0 +1,159 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-07-30T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v8.6.0",
+  "resources": [
+    {
+      "_id": "wrk_trackr_delivery",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "Trackr Delivery API",
+      "description": "Coleção pra testar o backend do desafio Foody Delivery (auth + pedidos)",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base_trackr",
+      "_type": "environment",
+      "parentId": "wrk_trackr_delivery",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:8080",
+        "token": ""
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "token"]
+      },
+      "color": null,
+      "isPrivate": false
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_trackr_delivery",
+      "name": "Auth",
+      "description": "Cadastro e login. Não exigem token."
+    },
+    {
+      "_id": "req_registrar",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Registrar usuário",
+      "description": "Cria um novo usuário e já retorna o token JWT. Copie o token da resposta e cole na variável 'token' do environment.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/registrar",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Sozim\",\n  \"email\": \"sozim@teste.com\",\n  \"senha\": \"123456\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "authentication": {},
+      "parameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login",
+      "description": "Autentica um usuário já cadastrado e retorna o token JWT.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"sozim@teste.com\",\n  \"senha\": \"123456\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "authentication": {},
+      "parameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true
+    },
+    {
+      "_id": "fld_pedidos",
+      "_type": "request_group",
+      "parentId": "wrk_trackr_delivery",
+      "name": "Pedidos",
+      "description": "Exigem token JWT válido no header Authorization."
+    },
+    {
+      "_id": "req_criar_pedido",
+      "_type": "request",
+      "parentId": "fld_pedidos",
+      "name": "Criar pedido",
+      "method": "POST",
+      "url": "{{ _.base_url }}/pedidos",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"cliente\": \"João da Silva\",\n  \"itens\": [\"1 Pizza Grande\", \"1 Refrigerante 2L\"],\n  \"enderecoEntrega\": \"Rua das Flores, 123 - São Paulo, SP\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "authentication": {},
+      "parameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true
+    },
+    {
+      "_id": "req_listar_pedidos",
+      "_type": "request",
+      "parentId": "fld_pedidos",
+      "name": "Listar todos os pedidos",
+      "method": "GET",
+      "url": "{{ _.base_url }}/pedidos",
+      "body": {},
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "authentication": {},
+      "parameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true
+    },
+    {
+      "_id": "req_buscar_pedido_por_id",
+      "_type": "request",
+      "parentId": "fld_pedidos",
+      "name": "Buscar pedido por ID",
+      "description": "Troque o '1' no fim da URL pelo ID do pedido que quer consultar.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/pedidos/1",
+      "body": {},
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "authentication": {},
+      "parameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true
+    },
+    {
+      "_id": "req_atualizar_status",
+      "_type": "request",
+      "parentId": "fld_pedidos",
+      "name": "Atualizar status do pedido",
+      "description": "Status válidos: RECEBIDO, EM_PREPARO, SAIU_PARA_ENTREGA, ENTREGUE, CANCELADO. Troque o '1' na URL pelo ID do pedido.",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/pedidos/1/status",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"EM_PREPARO\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "authentication": {},
+      "parameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true
+    }
+  ]
+}
