@@ -77,6 +77,8 @@ export const authService = {
 export const pedidosService = {
   listar: (token) => requisicao('/pedidos', { token }),
 
+  buscarPorId: (token, id) => requisicao(`/pedidos/${encodeURIComponent(id)}`, { token }),
+
   criar: (token, dados) =>
     requisicao('/pedidos', {
       method: 'POST',
